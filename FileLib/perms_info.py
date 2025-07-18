@@ -32,7 +32,11 @@ class NoPermissions:
         return "no-permissions"
 
     def check(file_perms: int) -> bool:
-        return file_perms == 0o000
+        return (
+            file_perms & stat.S_IRWXU == 0 and
+            file_perms & stat.S_IRWXG == 0 and
+            file_perms & stat.S_IRWXO == 0
+        )
     
 class OwnerNoAccess:
     def name() -> str:
