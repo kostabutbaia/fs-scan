@@ -47,7 +47,14 @@ class FileLibrary:
         self._scan_dirs(self.dir_path)
 
     def _scan_dirs(self, dir_path: str) -> None:
-        entries = os.listdir(dir_path)
+        try:
+            entries = os.listdir(dir_path)
+        except PermissionError:
+            print(f"Permission denied, skipping this directory: '{dir_path}'")
+            return  # Skip this inaccessible directory 
+        except FileNotFoundError:
+            print(f"Directory not found, skipping this directory: '{dir_path}'")
+            return  # Skip if directory was removed during previous for loop
 
         for item_name in entries:
             file_path = os.path.join(dir_path, item_name)
